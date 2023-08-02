@@ -11,28 +11,37 @@ module.exports = {
         const Poll = require("../../models/poll");
         const { EmbedBuilder } = require('discord.js');
         let polls = await Poll.find();
-
+        
         let embed = new EmbedBuilder()
-            .setTitle("Active Polls")
+            .setTitle("No Active Polls")
             .setColor("Yellow");
-            
+        
         for(let i = 0; i < polls.length; ++i)
         {
             let pName = polls[i].poll_title;
+            let movieList = "";
+
             if(polls[i].winner == "none")
             {
+                embed.setTitle("Active Polls");
+                console.log(pName);
+
+                for(let j = 0; j < polls[i].movies.length; ++j )
+                {
+                    movieList += polls[i].movies[j].title + " \n";
+                }
+
                 embed.addFields(
                     { 
-                        name: `${pName}`, 
+                        name: pName,
+                        value: movieList, 
+                        inline:true
                     }
                 )
-            }
-            else
-            {
-                embed.setTitle("No Active Polls");
+                console.log("done addFields");
             }
         }
 
-        interaction.editReply({ embeds: [ embed ]});
+        interaction.editReply({ embeds: [ embed, embed2 ]});
     }
 }
